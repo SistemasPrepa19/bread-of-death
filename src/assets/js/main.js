@@ -21,18 +21,17 @@ Promise.all([
   const nav = document.querySelector('nav');
   const homeSection = document.querySelector('#home');
 
+  // Mostrar/ocultar el botón y cambiar el estilo del nav
   if (homeSection) {
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
           const isHomeVisible = entry.isIntersecting;
 
-          // Botón arriba
           if (btnTop) {
             btnTop.classList.toggle('visible', !isHomeVisible);
           }
 
-          // Estilo nav
           if (nav) {
             nav.classList.toggle('in-home', isHomeVisible);
           }
@@ -44,18 +43,17 @@ Promise.all([
     observer.observe(homeSection);
   }
 
-  // Acción de scroll al top
+  // Scroll suave a #home al hacer click
   if (btnTop) {
     btnTop.addEventListener('click', (e) => {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const home = document.querySelector('#home');
+      if (home) {
+        home.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        // Fallback: ir al top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
   }
-});
-
-
-btnTop.addEventListener('click', (e) => {
-  e.preventDefault();
-  const home = document.querySelector('#home');
-  home?.scrollIntoView({ behavior: 'smooth' });
 });
