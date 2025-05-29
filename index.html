@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bread Of Death</title>
+  <link rel="stylesheet" href="/src/assets/css/styles.css" />
+</head>
+
+<body>
+  <div id="header-container"></div>
+  <div id="main-container"></div>
+  <div id="footer-container"></div>
+
+  <div class="bottom-bar">
+    <div class="audio-player">
+      <div class="left">
+        <button class="btn-play">▶</button>
+      </div>
+      <div class="title">
+          <span class="time">Black Soul</span>
+      </div>
+      <div class="time">
+        <span class="current">0:00</span> / <span class="duration">0:00</span>
+      </div>
+    </div>
+    <div class="progress">
+      <div class="progress-bar"></div>
+    </div>
+    <button  class="btn-top">
+        <a>◬</a>
+    </button>
+  </div>
+
+  <audio id="audio" src="/src/assets/audio/Black Soul.mp3"></audio>
+
+  <script src="/src/assets/js/audio_player.js"></script>
+  <script src="/src/assets/js/main.js"></script>
+</body>
+
+</html>
