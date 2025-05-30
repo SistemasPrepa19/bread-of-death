@@ -20,30 +20,45 @@ Promise.all([
   const btnTop = document.querySelector('.btn-top');
   const nav = document.querySelector('nav');
   const homeSection = document.querySelector('#home');
+  const sections = document.querySelectorAll('section');
+  const navLinks = document.querySelectorAll('nav a');
 
-  // Mostrar/ocultar el botón y cambiar el estilo del nav
-  if (homeSection) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach(entry => {
-          const isHomeVisible = entry.isIntersecting;
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(entry => {
+        const isIntersecting = entry.isIntersecting;
+        const section = entry.target;
+        const sectionId = section.id;
 
-          if (btnTop) {
-            btnTop.classList.toggle('visible', !isHomeVisible);
-          }
+        // Mostrar/ocultar botón "Top"
+        if (sectionId === 'home' && btnTop) {
+          btnTop.classList.toggle('visible', !isIntersecting);
+        }
 
-          if (nav) {
-            nav.classList.toggle('in-home', isHomeVisible);
-          }
-        });
-      },
-      { threshold: 0.5 }
-    );
+        // Cambiar estilo del nav
+        if (sectionId === 'home' && nav) {
+          nav.classList.toggle('in-home', isIntersecting);
+        }
 
-    observer.observe(homeSection);
-  }
+        // Activar link del nav
+        if (isIntersecting) {
+          navLinks.forEach(link => {
+            const target = link.getAttribute('data-target');
+            link.classList.toggle('active', target === sectionId);
+          });
 
-  // Scroll suave a #home al hacer click
+          // Mostrar la sección gradualmente
+          section.classList.add('visible');
+        } else {
+          section.classList.remove('visible');
+        }
+      });
+    },
+    { threshold: 0.3 }
+  );
+
+  sections.forEach(section => observer.observe(section));
+
   if (btnTop) {
     btnTop.addEventListener('click', (e) => {
       e.preventDefault();
@@ -51,9 +66,46 @@ Promise.all([
       if (home) {
         home.scrollIntoView({ behavior: 'smooth' });
       } else {
-        // Fallback: ir al top
         window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     });
+  }
+
+  // ==============================
+  // GALERÍA DINÁMICA - BREAD OF DEATH
+  // ==============================
+  const carousel = document.querySelector('.gallery-carousel');
+  const dots = document.querySelectorAll('.gallery-indicators .dot');
+  const prevBtn = document.querySelector('.gallery-btn.prev');
+  const nextBtn = document.querySelector('.gallery-btn.next');
+  const images = document.querySelectorAll('.gallery-carousel img');
+
+  if (carousel && images.length > 0) {
+    let index = 0;
+
+    function updateGallery() {
+      const width = images[0].clientWidth + 25; // ancho + margen
+      carousel.style.transform = `translateX(-${index * width}px)`;
+
+      dots.forEach(dot => dot.classList.remove('active'));
+      if (dots[index]) dots[index].classList.add('active');
+    }
+
+    prevBtn?.addEventListener('click', () => {
+      index = (index > 0) ? index - 1 : images.length - 1;
+      updateGallery();
+    });
+
+    nextBtn?.addEventListener('click', () => {
+      index = (index + 1) % images.length;
+      updateGallery();
+    });
+
+    setInterval(() => {
+      index = (index + 1) % images.length;
+      updateGallery();
+    }, 5000);
+
+    updateGallery();
   }
 });
